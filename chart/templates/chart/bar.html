@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bar Chart</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+  <div style="width:400px;">
+      <canvas id="lineChart" height="700" width="700">
+    </div>
+    </canvas>
+    <button id="charge">Charge</charge>
+    {% load staticfiles %}
+    <script type="text/javascript" src="{% static 'chart/js/jquery-1.9.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'chart/js/chart.min.js' %}"></script>
+    <script>
+    $(function(){
+      $.ajax({
+        url:"{% url 'chart:ajax' %}",
+        type:"get",
+        success:function(data)
+        {
+           var student=[];
+          var math=[];
+          var physics=[];
+          var grammer=[];
+          for(var i=0;i<data.length;i++)
+           {
+              student.push(data[i].fields.student_name);
+              math.push(data[i].fields.maths_mark);
+              physics.push(data[i].fields.physics_mark);
+              grammer.push(data[i].fields.grammer_mark);
+           }
+
+          const CHART=document.getElementById("lineChart");
+        //Voir les proprietes
+          console.log(Chart.defaults.global);
+          Chart.defaults.global.responsive=true;
+        // Chart.defaults.global.data.display=false;
+          Chart.defaults.scale.ticks.beginAtZero=true;
+          let barChart=new Chart(CHART,
+            {
+                // type:'doughnut',
+                // type:'pie',
+                type:'bar',
+                data:{
+                  labels:student,
+                  datasets:[
+                    {
+                    label:'Math',
+                    backgroundColor:'rgba(59,89,152,0.75)',
+                    borderColor:'rgba(59,89,152,1)',
+                    pointHoverBackgroundColor:'rgba(59,89,152,1)',
+                    pointHoverBorderColor:'rgba(59,89,152,1)',
+                    data:math
+                  },
+                  {
+                    label:'Physics',
+                    backgroundColor:'rgba(29,202,255,0.75)',
+                    borderColor:'rgba(29,202,255,1)',
+                    pointHoverBackgroundColor:'rgba(29,202,255,1)',
+                    pointHoverBorderColor:'rgba(29,202,255,1)',
+                    data:physics
+                  },
+                  {
+                    label:'Grammer',
+                    backgroundColor:'rgba(211,72,54,0.75)',
+                    borderColor:'rgba(211,72,54,1)',
+                    pointHoverBackgroundColor:'rgba(211,72,54,1)',
+                    pointHoverBorderColor:'rgba(211,72,54,1)',
+                    data:grammer
+                  },
+                ],
+                }
+            });
+
+
+        }
+      });
+
+    });
+
+
+
+
+
+    </script>
+  </body>
+</html>
